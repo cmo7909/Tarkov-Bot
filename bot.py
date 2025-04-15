@@ -1,15 +1,19 @@
 from transformers import AutoTokenizer, AutoModelForCausalLM
 import torch
+import os
 
 class TarkovBot:
     def __init__(self):
         model_id = "deepseek-ai/deepseek-llm-7b-chat"
+        offload_path = "./model_offload"
+
         print("⏳ Loading model...")
         self.tokenizer = AutoTokenizer.from_pretrained(model_id)
         self.model = AutoModelForCausalLM.from_pretrained(
             model_id,
             torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
-            device_map="auto"
+            device_map="auto",
+            offload_folder=offload_path
         )
         print("✅ Model loaded.")
 
